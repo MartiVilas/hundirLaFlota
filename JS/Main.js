@@ -91,6 +91,34 @@ class Tablero {
   }
 }
 
+// Función para agregar el tablero al DOM
+function añadirAlDom(id, tablero) {
+  const container = document.getElementById(id);
+  container.innerHTML = ""; 
+
+  // Recorrer todas las casillas del tablero y agregarlas al contenedor
+  for (let x = 0; x < tablero.size; x++) {
+    let fila = document.createElement("div");
+    fila.classList.add("fila");
+
+    for (let y = 0; y < tablero.size; y++) {
+      let casilla = document.createElement("div");
+      casilla.classList.add("casilla");
+
+      // Si la casilla está ocupada, mostrar el nombre del barco
+      if (tablero.casillas[x][y].ocupada) {
+        casilla.textContent = tablero.casillas[x][y].nombreBarco;
+        casilla.style.backgroundColor = "lightblue";
+      } else {
+        casilla.textContent = "";
+        casilla.style.backgroundColor = "white";
+      }
+      fila.appendChild(casilla);
+    }
+    container.appendChild(fila);
+  }
+}
+
 function init() {
   let tablero = new Tablero(10);
 
@@ -98,6 +126,7 @@ function init() {
   barcos.forEach((barco) => {
     tablero.colocarBarco(barco);
   });
-  
+
   console.log(tablero.casillas);
+  añadirAlDom('tablero',tablero);
 }
