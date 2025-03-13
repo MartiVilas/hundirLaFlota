@@ -1,4 +1,5 @@
-const barcos = [
+//Objeto con la informacion de los barcos
+let barcos = [
   { name: "Portaaviones", size: 5 },
   { name: "Acorazado", size: 4 },
   { name: "Crucero", size: 3 },
@@ -6,7 +7,7 @@ const barcos = [
   { name: "Destructor", size: 2 },
 ];
 
-// Definición de la clase Casilla
+// Clase casilla
 class Casilla {
   constructor(x, y, ocupada = false, impactada = false, nombreBarco = "") {
     this.x = x;
@@ -17,13 +18,14 @@ class Casilla {
   }
 }
 
-// Definición de la clase Tablero
+// Clase tablero
 class Tablero {
   constructor(size) {
     this.size = size;
     this.casillas = this.crearTablero();
   }
 
+  //Metodo para crear el tablero
   crearTablero() {
     let matriz = [];
     for (let x = 0; x < this.size; x++) {
@@ -35,7 +37,7 @@ class Tablero {
     }
     return matriz;
   }
-
+  // Metodo para conesguir la posicion y la direccion en la que ira el barco
   colocarBarco(barco) {
     let direccion = Math.random() < 0.5 ? "horizontal" : "vertical";
     let x, y;
@@ -46,21 +48,21 @@ class Tablero {
       x = Math.floor(Math.random() * this.size);
       y = Math.floor(Math.random() * this.size);
 
-      // Variable para verificar si hay espacio suficiente
+      // Variable para ver si hay espacio suficiente
       let espacioLibre = true;
 
-      // Comprobar si hay espacio dependiendo de la dirección
+      // Mirar si hay espacio dependiendo de la dirección en este caso horizontal despues miraremos vertical.
       if (direccion === "horizontal" && y + barco.size <= this.size) {
         espacioLibre = true;
 
-        // Verificamos si las casillas en la fila están ocupadas
+        // Miramos si las casillas en la fila están ocupadas
         for (let i = 0; i < barco.size; i++) {
           if (this.casillas[x][y + i].ocupada) {
             espacioLibre = false;
           }
         }
 
-        // Si hay espacio, colocamos el barco
+        // Si hay espacio, ponemos el barco
         if (espacioLibre) {
           for (let i = 0; i < barco.size; i++) {
             this.casillas[x][y + i].ocupada = true;
@@ -68,17 +70,18 @@ class Tablero {
           }
           colocado = true;
         }
+        // Mirar si hay espacio dependiendo de la dirección en este caso vertial una bez ya comprovado el horizontal
       } else if (direccion === "vertical" && x + barco.size <= this.size) {
         espacioLibre = true;
 
-        // Verificamos si las casillas en la columna están ocupadas
+        // Miramos si las casillas en la columna están ocupadas
         for (let i = 0; i < barco.size; i++) {
           if (this.casillas[x + i][y].ocupada) {
             espacioLibre = false;
           }
         }
 
-        // Si hay espacio, colocamos el barco
+        // Si hay espacio, ponemos el barco
         if (espacioLibre) {
           for (let i = 0; i < barco.size; i++) {
             this.casillas[x + i][y].ocupada = true;
@@ -91,12 +94,13 @@ class Tablero {
   }
 }
 
+
 // Función para agregar el tablero al DOM
 function añadirAlDom(id, tablero) {
   const container = document.getElementById(id);
   container.innerHTML = ""; 
 
-  // Recorrer todas las casillas del tablero y agregarlas al contenedor
+  // Pasar por todas las casillas del tablero para ponerlas en el contenedor
   for (let x = 0; x < tablero.size; x++) {
     let fila = document.createElement("div");
     fila.classList.add("fila");
@@ -105,7 +109,7 @@ function añadirAlDom(id, tablero) {
       let casilla = document.createElement("div");
       casilla.classList.add("casilla");
 
-      // Si la casilla está ocupada, mostrar el nombre del barco
+      // Si la casilla esta ocupada, poner el nombre del barco
       if (tablero.casillas[x][y].ocupada) {
         casilla.textContent = tablero.casillas[x][y].nombreBarco;
         casilla.style.backgroundColor = "lightblue";
@@ -122,11 +126,12 @@ function añadirAlDom(id, tablero) {
 function init() {
   let tablero = new Tablero(10);
 
-  // Colocar los barcos en el tablero de forma aleatoria
+  // Poner los barcos en el tablero de forma randome
   barcos.forEach((barco) => {
     tablero.colocarBarco(barco);
   });
 
+  //Poner el tablero creado en el dom y mostrar la estructura por consola.
   console.log(tablero.casillas);
   añadirAlDom('tablero',tablero);
 }
